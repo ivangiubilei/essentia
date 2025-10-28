@@ -1,21 +1,74 @@
 # Essentia
 
-**TODO: Add description**
+**Essentia** is a simple stack-based programming language created just for fun.
 
-## Installation
+## Features
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `essentia` to your list of dependencies in `mix.exs`:
+### Arithmetic
 
-```elixir
-def deps do
-  [
-    {:essentia, "~> 0.1.0"}
-  ]
-end
+- `add`, `sub`, `mul`, `div`
+
+```
+2 3 add
+# 5
 ```
 
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at <https://hexdocs.pm/essentia>.
+- `mod`
 
+```
+10 2 mod
+# 0
+```
+
+- `inc`, `dec`
+
+```
+6 inc
+# 7
+```
+
+- `flt`, `inc` convert between integers and float
+
+```
+10 flt
+# 10.0
+```
+
+- `dup` duplicates the top element of the stack
+
+```
+2 dup mul
+# 4
+```
+
+- `:` swap the top two elements of the stack
+- `drop` remove the top element of the stack
+- `clear` / `clean` to empty the stack
+- `==`, `<`, `<=`, `>`, `>=`
+
+- `and`, `or`, `xor`, `not`
+
+```
+12 12 ==
+# true
+```
+
+### Output
+
+- `.` pop and print the top element of the stack
+
+- `.c`, `.h`, `.b`, `.o` pop and print the top element formatted as char, hexadecimal, binary, or octal
+
+```
+5 .b
+# 101
+```
+
+### Conditional
+
+`if`, `ife` conditional execution
+
+```
+-1 1 12 12 == ife
+# if 12 == 12 then 1 else -1
+```

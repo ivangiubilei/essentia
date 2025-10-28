@@ -8,6 +8,12 @@ defmodule Essentia.Tokens do
           {parsed, ""} = Integer.parse(token)
           {:number, parsed}
 
+        String.starts_with?(token, "$") and String.length(token) > 0 ->
+          {:str, binary_part(token, 1, byte_size(token) - 1)}
+
+        token in ["len", "concat", "emptys"] ->
+          {:str_op, String.to_atom(token)}
+
         token in ["true", "false"] ->
           {:bool, String.to_atom(token)}
 
@@ -20,7 +26,7 @@ defmodule Essentia.Tokens do
         token in [".", ":", ".c", ".h", ".b", ".o", "drop", "clear", "clean"] ->
           {:stack_op, String.to_atom(token)}
 
-        token in ["ife", "if"] ->
+        token in ["ife", "if", "for", "end"] ->
           {:keyword, String.to_atom(token)}
 
         true ->

@@ -5,6 +5,10 @@ defmodule Essentia.Parser do
     parse(Essentia.Stack.push(stack, el), t)
   end
 
+  def parse(stack, [{:str, el} | t]) do
+    parse(Essentia.Stack.push(stack, el), t)
+  end
+
   def parse(_stack, [{:stack_op, :clear} | t]) do
     parse(Essentia.Stack.new(), t)
   end
@@ -144,6 +148,31 @@ defmodule Essentia.Parser do
     {token1, stack} = Essentia.Stack.pop(stack)
 
     parse(Essentia.Stack.push(stack, !token1), t)
+  end
+
+  def parse(stack, [{:str_op, :concat} | t]) do
+    {a, stack} = Essentia.Stack.pop(stack)
+    {b, stack} = Essentia.Stack.pop(stack)
+
+    unless is_bitstring(a) or is_bitstring(b) do
+      raise Essentia.NotStringError
+    end
+
+    parse(Essentia.Stack.push(stack, b <> a), t)
+  end
+
+  def parse(stack, [{:str_op, :emptys} | t]) do
+    parse(Essentia.Stack.push(stack, " "), t)
+  end
+
+  def parse(stack, [{:str_op, :len} | t]) do
+    {a, stack} = Essentia.Stack.pop(stack)
+
+    unless is_bitstring(a) do
+      raise Essentia.NotStringError
+    end
+
+    parse(Essentia.Stack.push(stack, String.length(a)), t)
   end
 
   def parse(stack, [{:stack_op, :.} | t]) do

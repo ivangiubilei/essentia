@@ -24,31 +24,34 @@ defmodule Essentia.Utils do
       collect_inner(tail, [inner | acc])
     end
 
-    defp collect_inner(["for" | rest], acc), do: {acc, rest}
+    defp collect_inner(["repeat" | rest], acc), do: {acc, rest}
     defp collect_inner([x | rest], acc), do: collect_inner(rest, [x | acc])
 
+    # Entry point
     def repeat_x_times(list), do: _repeat_x_times(list, [])
+
+    # Base case
     defp _repeat_x_times([], acc), do: acc
 
+    # Nested list with count
     defp _repeat_x_times([h | t], acc) when is_list(h) do
-      IO.inspect(h)
+      # First element is the repeat count
+      [count_str | rest] = h
+      count = String.to_integer(count_str)
 
-      count =
-        h
-        |> List.first()
-        |> String.to_integer()
+      # Recursively expand the inner list first
+      expanded_inner = _repeat_x_times(rest, [])
 
-      h = List.delete_at(h, 0)
+      # Repeat the expanded inner list count times
+      repeated = Enum.flat_map(1..count, fn _ -> expanded_inner end)
 
-      repeated =
-        List.duplicate(h, count)
-        |> List.flatten()
-
-      _repeat_x_times(t, [repeated | acc])
+      # Continue with the tail
+      _repeat_x_times(t, acc ++ repeated)
     end
 
+    # Single element
     defp _repeat_x_times([h | t], acc) do
-      _repeat_x_times(t, [h | acc])
+      _repeat_x_times(t, acc ++ [h])
     end
   end
 end

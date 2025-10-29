@@ -74,17 +74,22 @@
 ```
 
 ### Strings
+
 - `$` to push a string to the top element of the stack
+
 ```
 $test
 # "test"
 ```
+
 - `concat` concat the top two elements of the stack
 - `emptys` is the equivalent of `" "`
 
 ### Looping
-- `for - end` loop
+
+- `repeat - end` loop
+
 ```
-1 end inc 3 for
+1 end inc 3 repeat
 # 1 inc inc inc
 ```

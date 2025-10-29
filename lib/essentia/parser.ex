@@ -33,10 +33,21 @@ defmodule Essentia.Parser do
     parse(Essentia.Stack.push(stack, trunc(token)), t)
   end
 
-  def parse(stack, [{:op, :dup} | t]) do
+  def parse(stack, [{:stack_op, :dup} | t]) do
     {token, stack} = Essentia.Stack.pop(stack)
     stack = Essentia.Stack.push(stack, token)
     stack = Essentia.Stack.push(stack, token)
+
+    parse(stack, t)
+  end
+
+  def parse(stack, [{:stack_op, :over} | t]) do
+    {a, stack} = Essentia.Stack.pop(stack)
+    {b, stack} = Essentia.Stack.pop(stack)
+
+    stack = Essentia.Stack.push(stack, b)
+    stack = Essentia.Stack.push(stack, a)
+    stack = Essentia.Stack.push(stack, b)
 
     parse(stack, t)
   end
@@ -88,35 +99,35 @@ defmodule Essentia.Parser do
     parse(Essentia.Stack.push(stack, token1 - 1), t)
   end
 
-  def parse(stack, [{:bool_op, :==} | t]) do
+  def parse(stack, [{:bool_op, :eql} | t]) do
     {token1, stack} = Essentia.Stack.pop(stack)
     {token2, stack} = Essentia.Stack.pop(stack)
 
     parse(Essentia.Stack.push(stack, token2 == token1), t)
   end
 
-  def parse(stack, [{:bool_op, :>} | t]) do
+  def parse(stack, [{:bool_op, :gt} | t]) do
     {token1, stack} = Essentia.Stack.pop(stack)
     {token2, stack} = Essentia.Stack.pop(stack)
 
     parse(Essentia.Stack.push(stack, token2 > token1), t)
   end
 
-  def parse(stack, [{:bool_op, :>=} | t]) do
+  def parse(stack, [{:bool_op, :gte} | t]) do
     {token1, stack} = Essentia.Stack.pop(stack)
     {token2, stack} = Essentia.Stack.pop(stack)
 
     parse(Essentia.Stack.push(stack, token2 >= token1), t)
   end
 
-  def parse(stack, [{:bool_op, :<} | t]) do
+  def parse(stack, [{:bool_op, :lt} | t]) do
     {token1, stack} = Essentia.Stack.pop(stack)
     {token2, stack} = Essentia.Stack.pop(stack)
 
     parse(Essentia.Stack.push(stack, token2 < token1), t)
   end
 
-  def parse(stack, [{:bool_op, :<=} | t]) do
+  def parse(stack, [{:bool_op, :lte} | t]) do
     {token1, stack} = Essentia.Stack.pop(stack)
     {token2, stack} = Essentia.Stack.pop(stack)
 

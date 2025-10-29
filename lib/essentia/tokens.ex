@@ -21,16 +21,16 @@ defmodule Essentia.Tokens do
       token in ["true", "false"] ->
         {:bool, String.to_atom(token)}
 
-      token in ["add", "sub", "div", "mul", "mod", "inc", "dec", "flt", "int", "dup"] ->
+      token in ["add", "sub", "div", "mul", "mod", "inc", "dec", "flt", "int"] ->
         {:op, String.to_atom(token)}
 
-      token in ["==", ">", ">=", "<", "<=", "and", "or", "xor", "not"] ->
+      token in ["eql", "gt", "gte", "lt", "lte", "and", "or", "xor", "not"] ->
         {:bool_op, String.to_atom(token)}
 
-      token in [".", ":", ".c", ".h", ".b", ".o", "drop", "clear", "clean"] ->
+      token in [".", ":", ".c", ".h", ".b", ".o", "drop", "clear", "clean", "dup", "over"] ->
         {:stack_op, String.to_atom(token)}
 
-      token in ["ife", "if", "for", "end"] ->
+      token in ["ife", "if"] ->
         {:keyword, String.to_atom(token)}
 
       token in ["@"] ->

@@ -42,7 +42,7 @@
 ```
 
 - `:` swap the top two elements of the stack
-- `drop` remove the top element of the stack
+- `drop` pops the top element of the stack
 - `clear` / `clean` to empty the stack
 - `==`, `<`, `<=`, `>`, `>=`
 
@@ -71,4 +71,20 @@
 ```
 -1 1 12 12 == ife
 # if 12 == 12 then 1 else -1
+```
+
+### Strings
+- `$` to push a string to the top element of the stack
+```
+$test
+# "test"
+```
+- `concat` concat the top two elements of the stack
+- `emptys` is the equivalent of `" "`
+
+### Looping
+- `for - end` loop
+```
+1 end inc 3 for
+# 1 inc inc inc
 ```

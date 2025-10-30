@@ -1,57 +1,27 @@
-defmodule Essentia.Utils do
-  defmodule For do
-    def replace_for(list) do
-      list
-      |> group_blocks()
-      |> repeat_x_times()
-      |> List.flatten()
-      |> Enum.reverse()
+defmodule Essentia.Utils.For do
+  alias Essentia.Stack
+
+  def pop_until(stack), do: _pop_until(stack, [], 0)
+
+  defp _pop_until(%Stack{stack: []}, _acc, _), do: raise(Essentia.ForNotClosedError)
+
+  defp _pop_until(stack, acc, 0) do
+    {val, new_stack} = Stack.pop(stack)
+
+    case val do
+      :end -> {acc, new_stack}
+      :for -> _pop_until(new_stack, [val | acc], 1)
+      _ -> _pop_until(new_stack, [val | acc], 0)
     end
+  end
 
-    def group_blocks(list), do: do_group(list, [])
+  defp _pop_until(stack, acc, count) do
+    {val, new_stack} = Stack.pop(stack)
 
-    defp do_group([], acc), do: Enum.reverse(acc)
-
-    defp do_group(["end" | rest], acc) do
-      {block, tail} = collect_inner(rest, [])
-      do_group(tail, [block | acc])
-    end
-
-    defp do_group([x | rest], acc), do: do_group(rest, [x | acc])
-
-    defp collect_inner(["end" | rest], acc) do
-      {inner, tail} = collect_inner(rest, [])
-      collect_inner(tail, [inner | acc])
-    end
-
-    defp collect_inner(["repeat" | rest], acc), do: {acc, rest}
-    defp collect_inner([x | rest], acc), do: collect_inner(rest, [x | acc])
-
-    # Entry point
-    def repeat_x_times(list), do: _repeat_x_times(list, [])
-
-    # Base case
-    defp _repeat_x_times([], acc), do: acc
-
-    # Nested list with count
-    defp _repeat_x_times([h | t], acc) when is_list(h) do
-      # First element is the repeat count
-      [count_str | rest] = h
-      count = String.to_integer(count_str)
-
-      # Recursively expand the inner list first
-      expanded_inner = _repeat_x_times(rest, [])
-
-      # Repeat the expanded inner list count times
-      repeated = Enum.flat_map(1..count, fn _ -> expanded_inner end)
-
-      # Continue with the tail
-      _repeat_x_times(t, acc ++ repeated)
-    end
-
-    # Single element
-    defp _repeat_x_times([h | t], acc) do
-      _repeat_x_times(t, acc ++ [h])
+    case val do
+      :end -> _pop_until(new_stack, [val | acc], count - 1)
+      :for -> _pop_until(new_stack, [val | acc], count + 1)
+      _ -> _pop_until(new_stack, [val | acc], count)
     end
   end
 end

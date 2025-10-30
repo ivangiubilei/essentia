@@ -52,6 +52,20 @@ defmodule Essentia.Parser do
     parse(stack, t)
   end
 
+  def parse(stack, [{:loop_op, :for} | t]) do
+    {counter, stack} = Essentia.Stack.pop(stack)
+
+    {res, stack} =
+      Essentia.Utils.For.pop_until(stack)
+
+    duplicated = List.duplicate(res, counter) |> List.flatten()
+    parse(Essentia.Stack.push_many(stack, duplicated), t)
+  end
+
+  def parse(stack, [{:loop_op, :end} | t]) do
+    parse(Essentia.Stack.push(stack, :end), t)
+  end
+
   def parse(stack, [{:op, :add} | t]) do
     {token1, stack} = Essentia.Stack.pop(stack)
     {token2, stack} = Essentia.Stack.pop(stack)
@@ -253,6 +267,9 @@ defmodule Essentia.Parser do
       parse(Essentia.Stack.push(stack, else_), t)
     end
   end
+
+  def parse(_stack, [{:unrecognized, :repeat} | _t]),
+    do: raise(Essentia.ForNotClosedError)
 
   def parse(_stack, [{:unrecognized, token} | _t]),
     do: raise(Essentia.UnknownTokenError, token: token)

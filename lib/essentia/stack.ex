@@ -11,6 +11,11 @@ defmodule Essentia.Stack do
   @spec push(t(), any()) :: t()
   def push(%Stack{stack: s}, value), do: %Stack{stack: [value | s]}
 
+  @spec push_many(t(), list(any())) :: t()
+  def push_many(stack, values) when is_list(values) do
+    Enum.reduce(values, stack, fn value, acc -> push(acc, value) end)
+  end
+
   @spec pop(t()) :: {any(), t()}
   def pop(%Stack{stack: []}), do: raise(Essentia.EmptyStackError)
   def pop(%Stack{stack: [h | t]}), do: {h, %Stack{stack: t}}

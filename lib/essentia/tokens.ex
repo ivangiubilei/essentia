@@ -2,7 +2,6 @@ defmodule Essentia.Tokens do
   def tokenize(string) do
     string
     |> String.split()
-    |> Essentia.Utils.For.replace_for()
     |> Enum.map(&classify_token/1)
   end
 
@@ -32,6 +31,9 @@ defmodule Essentia.Tokens do
 
       token in ["ife", "if"] ->
         {:keyword, String.to_atom(token)}
+
+      token in ["end", "for"] ->
+        {:loop_op, String.to_atom(token)}
 
       token in ["@"] ->
         {:loop_variable, String.to_atom(token)}

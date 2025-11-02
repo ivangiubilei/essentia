@@ -44,7 +44,7 @@
 - `:` swap the top two elements of the stack
 - `drop` pops the top element of the stack
 - `clear` / `clean` to empty the stack
-- `==`, `<`, `<=`, `>`, `>=`
+- `eql`, `lt`, `lte`, `gt`, `gte`
 
 - `and`, `or`, `xor`, `not`
 
@@ -87,9 +87,9 @@ $test
 
 ### Looping
 
-- `repeat - end` loop
+- `for - end` loop (currently wip)
 
 ```
-1 end inc 3 repeat
-# 1 inc inc inc
+end 1 3 for
+# 1 1 1
 ```
